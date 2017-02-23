@@ -1,5 +1,6 @@
 import math
 
+dimensions = 256
 earth_radius = 6378137.0
 min_latitude = -85.05112878
 max_latitude = 85.05112878
@@ -10,7 +11,7 @@ def clip(num, min_num, max_num):
   return min(max(num, min_num), max_num)
 
 def map_size(detail):
-  return 256 * 2**detail
+  return dimensions * 2**detail
 
 def ground_resolution(latitude, detail):
   latitude = clip(latitude, min_latitude, max_latitude)
@@ -44,14 +45,14 @@ def pixel_to_coord(pixel_x, pixel_y, detail):
   return (latitude, longitude)
 
 def pixel_to_tile(pixel_x, pixel_y):
-  tile_x = pixel_x / 256
-  tile_y = pixel_y / 256
+  tile_x = pixel_x / dimensions
+  tile_y = pixel_y / dimensions
 
   return (tile_x, tile_y)
 
 def tile_to_pixel(tile_x, tile_y):
-  pixel_x = tile_x * 256
-  pixel_y = tile_y * 256
+  pixel_x = tile_x * dimensions
+  pixel_y = tile_y * dimensions
 
   return (pixel_x, pixel_y)
 

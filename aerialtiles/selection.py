@@ -1,13 +1,15 @@
 import tiles
 
+dimensions = 256
+
 def get_quad_keys_matrix(top_left_latitude, top_left_longitude, bottom_right_latitude, bottom_right_longitude, detail):
-  (top_left_pixel_x, top_left_pixel_y) = get_tile(top_left_latitude, top_left_longitude, detail)
-  (bottom_right_pixel_x, bottom_right_pixel_y) = get_tile(bottom_right_latitude, bottom_right_longitude, detail)
+  (top_left_tile_x, top_left_tile_y) = get_tile(top_left_latitude, top_left_longitude, detail)
+  (bottom_right_tile_x, bottom_right_tile_y) = get_tile(bottom_right_latitude, bottom_right_longitude, detail)
 
   quad_keys_matrix = []
-  for x in range(top_left_pixel_x, bottom_right_pixel_x + 1):
+  for x in range(top_left_tile_x, bottom_right_tile_x + 1):
     quad_keys_x = []
-    for y in range(top_left_pixel_y, bottom_right_pixel_y + 1):
+    for y in range(top_left_tile_y, bottom_right_tile_y + 1):
       quad_keys_x.append(tiles.tile_to_quad_key(x, y, detail))
     if quad_keys_x:
       quad_keys_matrix.append(quad_keys_x)
@@ -17,3 +19,27 @@ def get_quad_keys_matrix(top_left_latitude, top_left_longitude, bottom_right_lat
 def get_tile(latitude, longitude, detail):
   (pixel_x, pixel_y) = tiles.coord_to_pixel(latitude, longitude, detail)
   return tiles.pixel_to_tile(pixel_x, pixel_y)
+
+def get_crop_rectangle(top_left_latitude, top_left_longitude, bottom_right_latitude, bottom_right_longitude, detail):
+  (top_left_pixel_x, top_left_pixel_y) = tiles.coord_to_pixel(top_left_latitude, top_left_longitude, detail)
+  (bottom_right_pixel_x, bottom_right_pixel_y) = tiles.coord_to_pixel(bottom_right_latitude, bottom_right_longitude, detail)
+  (top_left_tile_x, top_left_tile_y) = tiles.pixel_to_tile(top_left_pixel_x, top_left_pixel_y)
+
+  top_left_rectangle_x = top_left_pixel_x - dimensions * top_left_tile_x
+  top_left_rectangle_y = top_left_pixel_y - dimensions * top_left_tile_y
+  bottom_right_rectangle_x = bottom_right_pixel_x - dimensions * top_left_tile_x
+  bottom_right_rectangle_y = bottom_right_pixel_y - dimensions * top_left_tile_y
+
+  if top_left_rectangle_x == bottom_right_rectangle_x:
+    if top_left_rectangle_x == (tiles.map_size(detail) - 1):
+      top_left_rectangle_x -= 1
+    else:
+      bottom_right_rectangle_x += 1
+
+  if top_left_rectangle_y == bottom_right_rectangle_y:
+    if top_left_rectangle_y == (tiles.map_size(detail) - 1):
+      top_left_rectangle_y -= 1
+    else:
+      bottom_right_rectangle_y += 1  
+
+  return (top_left_rectangle_x, top_left_rectangle_y, bottom_right_rectangle_x, bottom_right_rectangle_y)
