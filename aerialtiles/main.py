@@ -1,7 +1,8 @@
 import selection
 import download
 
-def download_image_with_bounding_box(top_left_latitude, top_left_longitude, bottom_right_latitude, bottom_right_longitude, detail, filename):
+def download_image_with_bounding_box(top_left_latitude, top_left_longitude, bottom_right_latitude, bottom_right_longitude, filename):
+  detail = selection.get_detail(top_left_latitude, top_left_longitude, bottom_right_latitude, bottom_right_longitude)
   quad_keys_matrix = selection.get_quad_keys_matrix(top_left_latitude, top_left_longitude, bottom_right_latitude, bottom_right_longitude, detail)
   crop_rectangle = selection.get_crop_rectangle(top_left_latitude, top_left_longitude, bottom_right_latitude, bottom_right_longitude, detail)
 

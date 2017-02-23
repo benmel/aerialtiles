@@ -17,6 +17,12 @@ def stitch_images(quad_keys_matrix):
       image.paste(quad_key_image, (x * dimensions, y * dimensions))
   return image
 
+def is_image_available(quad_key):
+  url = get_url(quad_key)
+  quad_key_image = urllib.urlopen(url)
+  image_type = quad_key_image.info().type
+  return image_type == 'image/jpeg'
+
 def get_url(quad_key):
   return tile_url.format(quad_key)
 
